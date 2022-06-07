@@ -1,0 +1,43 @@
+﻿<Window x:Class="MaterialUI.MainWindow"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+        TextElement.FontWeight="Regular"
+        TextElement.FontSize="13"        
+        TextOptions.TextFormattingMode="Ideal"
+        TextOptions.TextRenderingMode="Auto"
+        Background="{DynamicResource MaterialDesignPaper}"
+        FontFamily="{DynamicResource MaterialDesignFont}"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"        
+        mc:Ignorable="d"
+        xmlns:ViewModel="clr-namespace:MaterialUI.MVVM.ViewModel"
+        Title="DataReader - JCM" Height="700" Width="1200"
+>
+    
+    <Window.DataContext>
+        <ViewModel:MainViewModel />
+    </Window.DataContext>
+    <materialDesign:DrawerHost>
+            <materialDesign:DrawerHost.LeftDrawerContent>
+                <DockPanel MinWidth="212">
+                   
+                </DockPanel>
+            </materialDesign:DrawerHost.LeftDrawerContent>
+
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition />
+                </Grid.RowDefinitions>
+
+            <materialDesign:ColorZone Padding="16" materialDesign:ShadowAssist.ShadowDepth="Depth2"
+                                    Mode="PrimaryMid" DockPanel.Dock="Top">
+            </materialDesign:ColorZone>
+          
+            <ContentControl Grid.Row="1" Content="{Binding CurrentView}" Padding="25" Margin="20"/>                
+            
+        </Grid>
+        </materialDesign:DrawerHost>
+</Window>
