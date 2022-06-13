@@ -15,29 +15,32 @@
         xmlns:ViewModel="clr-namespace:MaterialUI.MVVM.ViewModel"
         Title="DataReader - JCM" Height="700" Width="1200"
 >
-    
+
+
     <Window.DataContext>
         <ViewModel:MainViewModel />
     </Window.DataContext>
-    <materialDesign:DrawerHost>
+    
+        <materialDesign:DrawerHost>
             <materialDesign:DrawerHost.LeftDrawerContent>
-                <DockPanel MinWidth="212">
-                   
-                </DockPanel>
-            </materialDesign:DrawerHost.LeftDrawerContent>
+            <DockPanel MinWidth="212">
 
-            <Grid>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition />
-                </Grid.RowDefinitions>
+            </DockPanel>
+        </materialDesign:DrawerHost.LeftDrawerContent>
+ 
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition />
+            </Grid.RowDefinitions>
 
             <materialDesign:ColorZone Padding="16" materialDesign:ShadowAssist.ShadowDepth="Depth2"
-                                    Mode="PrimaryMid" DockPanel.Dock="Top">
+                                Mode="PrimaryMid" DockPanel.Dock="Top">
             </materialDesign:ColorZone>
-          
-            <ContentControl Grid.Row="1" Content="{Binding CurrentView}" Padding="25" Margin="20"/>                
-            
+
+            <ContentControl Grid.Row="1" Content="{Binding CurrentView}" Padding="25" Margin="20"/>
+
         </Grid>
         </materialDesign:DrawerHost>
+    
 </Window>
