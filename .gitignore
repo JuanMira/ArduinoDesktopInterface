@@ -3,3 +3,5 @@
 MaterialUI/bin
 MaterialUI/database.db
 MaterialUI/DeviceConfiguration.json
+MaterialUI/obj/**
+MaterialUI/obj/Debug/**
