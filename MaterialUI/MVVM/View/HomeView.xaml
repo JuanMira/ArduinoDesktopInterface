@@ -115,9 +115,9 @@
         >
             <DataGrid 
                 x:Name="DataGrid" 
-                ItemsSource="{Binding Data}"                
+                ItemsSource="{Binding Data}"                   
+                IsReadOnly="True"
             >
-                
             </DataGrid>    
         </materialDesign:Card>
         

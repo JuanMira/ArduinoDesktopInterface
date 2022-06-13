@@ -5,10 +5,12 @@ using MaterialUI.MVVM.Model.Repository;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.IO.Ports;
 using System.Linq;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 using System.Windows.Input;
 
@@ -19,6 +21,7 @@ namespace MaterialUI.MVVM.ViewModel
         private SerialPort io = new SerialPort();
         private DataDAO _dataDao;
         private ExcelGenerator _excelGenerator;
+        private bool open = false;
         public HomeViewModel()
         {
             _dataDao = new DataDAO();
@@ -29,6 +32,16 @@ namespace MaterialUI.MVVM.ViewModel
 
             _initialDate = DateTime.Now;
             _finalDate = DateTime.Now;
+
+            io.BaudRate = 9600;
+
+            if (!_portSelected.Equals(""))
+            {
+                io.PortName = _portSelected;
+                InitArduino();
+            }
+                
+
             Data = new ObservableCollection<DataModel>();
         }
 
@@ -87,8 +100,7 @@ namespace MaterialUI.MVVM.ViewModel
             }
             set
             {
-                _portSelected = value;
-                Debug.WriteLine(value);
+                _portSelected = value;                
                 OnPropertyChanged();
             }
         }
@@ -147,7 +159,26 @@ namespace MaterialUI.MVVM.ViewModel
 
         private void ConnectPort()
         {
-            ReadConfJSon.SetConfiguration(_portSelected);            
+            if (_portSelected.Equals(""))
+            {
+                ReadConfJSon.SetConfiguration(_portSelected);
+
+            }
+            else
+            {
+                if (!_portSelected.Equals("") && !open)
+                    io.PortName = _portSelected;
+                try
+                {                    
+                    if(!open)
+                        InitArduino();
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine(ex.Message);
+                }
+            }
+            
         }
 
         private void Search()
@@ -164,11 +195,55 @@ namespace MaterialUI.MVVM.ViewModel
 
         private void GenerateExcel()
         {
-            if(Data.Count > 0)
-                _excelGenerator.ListToExcel(Data.ToList());
+            BackgroundWorker bw = new BackgroundWorker();
+            if (Data.Count > 0)
+            {
+                bw.DoWork += DoWorkFunction;                
+                bw.RunWorkerAsync();
+            }
         }
-        
 
+        private void DoWorkFunction(object sender, DoWorkEventArgs e)
+        {            
+            _excelGenerator.ListToExcel(Data.ToList());
+        }
+        #endregion
+
+        #region DataFromArduino
+        private void SerialPortDataReceived(object sender, SerialDataReceivedEventArgs e)
+        {
+            string inData = io.ReadLine();
+            // deserialization of the data
+            var inDataDes = JsonSerializer.Deserialize<DeviceSerializer>(inData);
+            if(inDataDes.deviceStatus)
+            {
+                Debug.WriteLine(inDataDes.type);
+                if(inDataDes.data != null)
+                {
+                    _dataDao.InsertData(inDataDes.data);
+                }
+            }
+                        
+        }
+
+        private void InitArduino() {
+            open = true;
+            
+            try
+            {
+                io.Open();
+                io.Write("connect");
+                io.DataReceived += new SerialDataReceivedEventHandler(SerialPortDataReceived);
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.Message);
+                if (!io.IsOpen)
+                {
+                    io.Close();
+                }
+            }
+        }
         #endregion
     }
 }
