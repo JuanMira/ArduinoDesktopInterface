@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -37,6 +38,26 @@ namespace MaterialUI.MVVM.Model.Repository
             return _d;
         }
 
+        public void InsertData(DataSerializer data)
+        {
+            try
+            {
+                _context.Data.Add(new DataModel
+                {
+                    Data1 = data.Data1,
+                    Data2 = data.Data2,
+                    Data3 = data.Data3,
+                    Data4 = data.Data4,
+                    Data5 = data.Data5,
+                    Data6 = data.Data6,
+                    DateCreate = DateTime.UtcNow
+                });
+                _context.SaveChanges();
+            }catch(Exception ex)
+            {
+                Debug.WriteLine(ex.Message);
+            }
+        }
 
     }
 }

@@ -22,8 +22,17 @@ namespace MaterialUI.Helpers
                 Debug.WriteLine(ex.Message);
             }
             var ws = wb.Worksheet($"Reporte_{DateTime.UtcNow.Month}_{DateTime.UtcNow.Day}");
+            ws.Cell("A1").Value = "Data 1";
+            ws.Cell("B1").Value = "Data 2";
+            ws.Cell("C1").Value = "Data 3";
+            ws.Cell("D1").Value = "Data 4";
+            ws.Cell("E1").Value = "Data 5";
+            ws.Cell("F1").Value = "Data 6";
+            ws.Cell("G1").Value = "Fecha de Creacion";
+            ws.Column("G").Width = 30;
 
-            int row = 1;
+
+            int row = 2;
             foreach(var c in list)
             {
                 ws.Cell("A" + row.ToString()).Value = c.Data1;
@@ -36,7 +45,7 @@ namespace MaterialUI.Helpers
 
                 row++;
             }
-            
+                        
             wb.SaveAs($"{Environment.CurrentDirectory}/reporte_{Guid.NewGuid()}.xlsx");
         }
     }
